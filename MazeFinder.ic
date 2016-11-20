@@ -1,6 +1,76 @@
 int LEFT_TOUCH= 10;
 int RIGHT_TOUCH= 11;
 
+
+
+int LEFT_MOTOR= 0;
+int RIGHT_MOTOR= 3;
+
+void forward()
+{
+	fd(LEFT_MOTOR);
+	fd(RIGHT_MOTOR);
+}
+
+void backward()
+{
+	bk(LEFT_MOTOR);
+	bk(RIGHT_MOTOR);
+}
+
+void right()
+{
+	fd(LEFT_MOTOR);
+	bk(RIGHT_MOTOR);
+}
+
+void left()
+{
+	fd(RIGHT_MOTOR);
+	bk(LEFT_MOTOR);
+}
+
+void stop()
+{
+	off(LEFT_MOTOR);
+	off(RIGHT_MOTOR);
+}
+
+
+
+void random_avoid() {
+	backward(); sleep(.05);
+	set_beeper_pitch(1000.); beeper_on();
+	if (random(2) == 0) left();
+	else right();
+	sleep((float)random(100)/400. + .05);
+	beeper_off();
+}
+
+void left_avoid() {
+	backward(); sleep(.05);
+	right(); sleep(.05);
+}
+
+void right_avoid() {
+	backward(); sleep(.05);
+	left(); sleep(.05);
+}	
+
+
+
+float _timer;
+
+void reset_timer() {
+	_timer= seconds();
+}
+
+float timer() {
+	return seconds() - _timer;
+}
+
+
+
 void main() {
 	int recent_bumps= 0;
 	reset_timer();
@@ -16,7 +86,7 @@ void main() {
 				} 	else {
 				        left_avoid();
 				 	reset_timer();
-				  	recent_bumps= 1;
+				  	recent_bumps++;
 				}
 			} 	else {
 			  	left_avoid();
@@ -33,7 +103,7 @@ void main() {
 				} 	else {
 				        right_avoid();
 				 	reset_timer();
-				  	recent_bumps= 1;
+				  	recent_bumps++;
 				}
 			} 	else {
 			  	right_avoid();
